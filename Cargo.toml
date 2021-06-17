@@ -12,10 +12,15 @@ path = "src/bin/advent2020_day01.rs"
 name = "day02"
 path = "src/bin/advent2020_day02.rs"
 
+[[bin]]
+name = "day03"
+path = "src/bin/advent2020_day03.rs"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 itertools = "0.10.1"
+num-cmp = "0.1.0"
 parse-display = "0.5.0"
 scan_fmt = "0.2.6"
