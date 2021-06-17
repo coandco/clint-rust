@@ -1,6 +1,5 @@
-#[macro_use]
-extern crate scan_fmt;
 use scan_fmt::parse::ScanError;
+use scan_fmt::scan_fmt;
 
 #[derive(Debug)]
 struct Rule {
@@ -28,7 +27,7 @@ fn get_data() -> Result<Vec<Rule>, ScanError> {
 }
 
 fn process_rules(rules: &Vec<Rule>, part_one: bool) -> usize {
-    let mut num_valid: usize = 0;
+    let mut num_valid = 0;
     for rule in rules {
         if part_one {
             let num_in_pass = rule.pass.matches(rule.char).count();
