@@ -1,7 +1,8 @@
-use scan_fmt::parse::ScanError;
-use scan_fmt::scan_fmt;
+use parse_display::{Display as PDisplay, FromStr as PFromStr};
+use std::error::Error;
 
-#[derive(Debug)]
+#[derive(PDisplay, PFromStr, Debug)]
+#[display("{low}-{high} {char}: {pass}")]
 struct Rule {
     low: usize,
     high: usize,
@@ -9,21 +10,9 @@ struct Rule {
     pass: String,
 }
 
-fn get_data() -> Result<Vec<Rule>, ScanError> {
+fn get_data() -> Result<Vec<Rule>, impl Error> {
     let input = include_str!("../../inputs/advent2020_day02_input.txt");
-    input
-        .lines()
-        .map(|line| {
-            let (low, high, char, pass) =
-                scan_fmt!(line, "{d}-{d} {}: {}", usize, usize, char, String)?;
-            Ok(Rule {
-                low,
-                high,
-                char,
-                pass,
-            })
-        })
-        .collect()
+    input.lines().map(|line| line.parse::<Rule>()).collect()
 }
 
 fn process_rules(rules: &Vec<Rule>, part_one: bool) -> usize {
