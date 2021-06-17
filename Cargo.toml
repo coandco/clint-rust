@@ -4,9 +4,17 @@ version = "0.1.0"
 authors = ["Clint Olson <coandco@gmail.com>"]
 edition = "2018"
 
+[[bin]]
+name = "day01"
+path = "src/bin/advent2020_day01.rs"
+
+[[bin]]
+name = "day02"
+path = "src/bin/advent2020_day02.rs"
+
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 itertools = "0.10.1"
-rand = "0.8.0"
 scan_fmt = "0.2.6"
