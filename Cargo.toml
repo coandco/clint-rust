@@ -24,6 +24,10 @@ path = "src/bin/advent2020_day04.rs"
 name = "day05"
 path = "src/bin/advent2020_day05.rs"
 
+[[bin]]
+name = "day06"
+path = "src/bin/advent2020_day06.rs"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
