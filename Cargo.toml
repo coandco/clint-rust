@@ -20,6 +20,10 @@ path = "src/bin/advent2020_day03.rs"
 name = "day04"
 path = "src/bin/advent2020_day04.rs"
 
+[[bin]]
+name = "day05"
+path = "src/bin/advent2020_day05.rs"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -29,3 +33,4 @@ num-cmp = "0.1.0"
 parse-display = "0.5.0"
 scan_fmt = "0.2.6"
 hex = "0.4"
+phf = { version = "0.9", features = ["macros"] }
