@@ -4,7 +4,7 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone)]
-struct Bag {
+pub struct Bag {
     color: String,
     bag_value: u32,
     contains: HashMap<String, u32>,
@@ -49,11 +49,6 @@ fn line_to_bag(line: &str) -> Result<Bag, String> {
     } else {
         Err(format!("Couldn't parse line {}", line))
     }
-}
-
-fn get_data() -> Result<Vec<Bag>, String> {
-    let raw_data = include_str!("../../inputs/advent2020_day07_input.txt");
-    raw_data.lines().map(line_to_bag).collect()
 }
 
 fn build_reversed_bag_map(bag_map: &BagMap) -> ReverseBagMap {
@@ -144,18 +139,30 @@ fn generate_bag_values(
     known_values.clone()
 }
 
-fn main() {
-    let bag_list = get_data().expect("Couldn't parse bags!");
+pub fn generator(input: &str) -> (BagMap, ReverseBagMap) {
+    let bag_list = input
+        .lines()
+        .map(line_to_bag)
+        .collect::<Result<Vec<Bag>, String>>()
+        .expect("Couldn't parse input for day 7!");
     let mut bag_map: BagMap = HashMap::new();
     for bag in bag_list {
         bag_map.insert(bag.color.clone(), bag.to_owned());
     }
     let reversed_bag_map = build_reversed_bag_map(&bag_map);
-    let part_one_bags = get_all_containing_bags(&reversed_bag_map, "shiny gold".to_string());
-    println!("Part one: {}", part_one_bags.len() - 1);
-    // Filter our workload down to just the bags that are needed to compute the shiny gold value
+    (bag_map, reversed_bag_map)
+}
+
+pub fn part_one(data: &(BagMap, ReverseBagMap)) -> usize {
+    let (_, reversed_bag_map) = data;
+    get_all_containing_bags(reversed_bag_map, "shiny gold".to_string()).len() - 1
+}
+
+pub fn part_two(data: &(BagMap, ReverseBagMap)) -> u32 {
+    let (bag_map, reversed_bag_map) = data;
+    let mut my_bag_map = bag_map.clone();
     let relevant_bags = bag_descendants(&bag_map, "shiny gold".to_string());
-    bag_map.retain(|_, bag| relevant_bags.contains(&bag.color));
-    let known_bag_values = generate_bag_values(&mut bag_map, &reversed_bag_map);
-    println!("Part two: {}", known_bag_values[&"shiny gold".to_string()])
+    my_bag_map.retain(|_, bag| relevant_bags.contains(&bag.color));
+    let known_bag_values = generate_bag_values(&mut my_bag_map, reversed_bag_map);
+    known_bag_values[&"shiny gold".to_string()]
 }

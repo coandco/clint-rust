@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::iter::FromIterator;
 
 #[derive(Debug)]
-struct Group {
+pub struct Group {
     answers: Vec<HashSet<char>>,
 }
 
@@ -36,21 +36,18 @@ fn str_to_group(s: &str) -> Group {
     }
 }
 
-fn get_data() -> Vec<Group> {
-    let data = include_str!("../../inputs/advent2020_day06_input.txt");
-    data.split("\n\n").map(str_to_group).collect()
+pub fn generator(input: &str) -> Vec<Group> {
+    input.split("\n\n").map(str_to_group).collect()
 }
 
-fn main() {
-    let sets = get_data();
-    let part_one_answer = sets
-        .iter()
+pub fn part_one(data: &Vec<Group>) -> usize {
+    data.iter()
         .map(|x| x.any_questions_answered())
-        .sum::<usize>();
-    println!("Part one: {}", part_one_answer);
-    let part_two_answer = sets
-        .iter()
+        .sum::<usize>()
+}
+
+pub fn part_two(data: &Vec<Group>) -> usize {
+    data.iter()
         .map(|x| x.all_questions_answered())
-        .sum::<usize>();
-    println!("Part two: {}", part_two_answer);
+        .sum::<usize>()
 }

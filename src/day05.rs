@@ -22,19 +22,25 @@ fn translate_seat(seat: &str) -> Result<Seat, ParseIntError> {
     Seat::from_str_radix(outstring.as_str(), 2)
 }
 
-fn get_data() -> Result<Vec<Seat>, ParseIntError> {
-    let input = include_str!("../../inputs/advent2020_day05_input.txt");
-    input.lines().map(translate_seat).collect()
-}
-
-fn main() {
-    let seats = get_data().expect("Error parsing input!");
-    let (min, max, sum) = seats
-        .iter()
+pub fn generator(input: &str) -> (Seat, Seat, Seat) {
+    let data = input
+        .lines()
+        .map(translate_seat)
+        .collect::<Result<Vec<Seat>, _>>()
+        .expect("Error parsing input for day 5!");
+    data.iter()
         .copied()
         .fold((Seat::MAX, Seat::MIN, 0), |(min, max, sum), x| {
             (min.min(x), max.max(x), sum + x)
-        });
-    println!("Part one: {}", max);
-    println!("Part two: {}", (min..=max).sum::<Seat>() - sum);
+        })
+}
+
+pub fn part_one(data: &(Seat, Seat, Seat)) -> u32 {
+    let (_, max, _) = *data;
+    max
+}
+
+pub fn part_two(data: &(Seat, Seat, Seat)) -> u32 {
+    let (min, max, sum) = *data;
+    (min..=max).sum::<Seat>() - sum
 }

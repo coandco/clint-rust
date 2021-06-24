@@ -1,5 +1,3 @@
-#[macro_use(scan_fmt)]
-extern crate scan_fmt;
 use hex::decode as hex_decode;
 use scan_fmt::parse::ScanError;
 use std::collections::HashMap;
@@ -33,7 +31,7 @@ fn matches_height(raw_height: &str) -> bool {
 }
 
 #[derive(Debug)]
-struct Passport(HashMap<String, String>);
+pub struct Passport(HashMap<String, String>);
 impl Passport {
     fn part_one_valid(&self) -> bool {
         REQUIRED_FIELDS.iter().all(|key| self.0.contains_key(*key))
@@ -73,15 +71,14 @@ impl FromStr for Passport {
     }
 }
 
-fn get_data() -> Result<Vec<Passport>, ScanError> {
-    let input = include_str!("../../inputs/advent2020_day04_input.txt");
-    input.split("\n\n").map(|record| record.parse()).collect()
+pub fn generator(input: &str) -> Vec<Passport> {
+    input.split("\n\n").map(|record| record.parse()).collect::<Result<Vec<Passport>, _>>().expect("Error parsing input for day 4!")
 }
 
-fn main() {
-    let data = get_data().expect("Couldn't parse input!");
-    let num_valid_part_one = data.iter().filter(|record| record.part_one_valid()).count();
-    println!("Part one: {}", num_valid_part_one);
-    let num_valid_part_two = data.iter().filter(|record| record.part_two_valid()).count();
-    println!("Part two: {}", num_valid_part_two);
+pub fn part_one(data: &Vec<Passport>) -> usize {
+    data.iter().filter(|record| record.part_one_valid()).count()
+}
+
+pub fn part_two(data: &Vec<Passport>) -> usize {
+    data.iter().filter(|record| record.part_two_valid()).count()
 }
