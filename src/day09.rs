@@ -4,8 +4,8 @@ fn find_invalid(data: &Vec<usize>, preamble_length: usize) -> Option<usize> {
     let mut known = data[..preamble_length].to_vec();
     for item in &data[preamble_length..] {
         let mut item_valid = false;
-        for pair in Itertools::combinations(known.iter(), 2) {
-            if pair.into_iter().copied().sum::<usize>() == *item {
+        for (a, b) in Itertools::tuple_combinations(known.iter()) {
+            if (a + b) == *item {
                 known.remove(0);
                 known.push(*item);
                 item_valid = true;
