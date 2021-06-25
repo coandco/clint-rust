@@ -51,11 +51,6 @@ pub fn part_one(data: &Vec<usize>) -> usize {
 pub fn part_two(data: &Vec<usize>) -> usize {
     let invalid_num = find_invalid(data, 25).unwrap();
     let good_range = find_summed_range(data, invalid_num).unwrap();
-    let (min, max) = good_range
-        .iter()
-        .copied()
-        .fold((usize::MAX, usize::MIN), |(min, max), x| {
-            (min.min(x), max.max(x))
-        });
+    let (min, max) = Itertools::minmax(good_range.iter()).into_option().unwrap();
     min + max
 }
