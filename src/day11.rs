@@ -27,14 +27,14 @@ impl AddAssign for Coord {
 }
 
 static NEIGHBORS: [Coord; 8] = [
-    Coord{x:-1, y:-1},
-    Coord{x:0, y:-1},
-    Coord{x:1, y:-1},
-    Coord{x:-1, y:0},
-    Coord{x:1, y:0},
-    Coord{x:-1, y:1},
-    Coord{x:0, y:1},
-    Coord{x:1, y:1}
+    Coord { x: -1, y: -1 },
+    Coord { x: 0, y: -1 },
+    Coord { x: 1, y: -1 },
+    Coord { x: -1, y: 0 },
+    Coord { x: 1, y: 0 },
+    Coord { x: -1, y: 1 },
+    Coord { x: 0, y: 1 },
+    Coord { x: 1, y: 1 },
 ];
 
 fn in_bounds(shape: (i32, i32), coord: Coord) -> bool {
@@ -60,20 +60,20 @@ impl HashedGrid {
         let grid = Self::populate_hashgrid(data);
         let neighbors: Neighbors = match simple_neighbors {
             true => Self::generate_part_one_neighbors_hashgrid(&grid),
-            false => Self::generate_part_two_neighbors_hashgrid(&grid, &height, &width)
+            false => Self::generate_part_two_neighbors_hashgrid(&grid, &height, &width),
         };
-        let crowd_tolerance: i32 = if simple_neighbors {4} else {5};
+        let crowd_tolerance: i32 = if simple_neighbors { 4 } else { 5 };
 
         HashedGrid {
             height,
             width,
             grid,
             neighbors,
-            crowd_tolerance
+            crowd_tolerance,
         }
     }
 
-    fn populate_hashgrid (data: &Vec<Vec<u8>>) -> HashGrid {
+    fn populate_hashgrid(data: &Vec<Vec<u8>>) -> HashGrid {
         let mut grid: HashGrid = HashMap::new();
         for (i, line) in data.iter().enumerate() {
             for (j, byte) in line.iter().enumerate() {
@@ -113,7 +113,11 @@ impl HashedGrid {
         neighbors
     }
 
-    fn generate_part_two_neighbors_hashgrid(grid: &HashGrid, height: &i32, width: &i32) -> Neighbors {
+    fn generate_part_two_neighbors_hashgrid(
+        grid: &HashGrid,
+        height: &i32,
+        width: &i32,
+    ) -> Neighbors {
         let mut neighbors: Neighbors = HashMap::new();
         for coord in grid.keys() {
             let mut neighbor_set: HashSet<Coord> = HashSet::new();
@@ -133,7 +137,10 @@ impl HashedGrid {
     }
 
     fn _new_value(&self, coord: Coord) -> bool {
-        let num_neighbors: i32 = self.neighbors[&coord].iter().map(|n| self.grid[n] as i32).sum::<i32>();
+        let num_neighbors: i32 = self.neighbors[&coord]
+            .iter()
+            .map(|n| self.grid[n] as i32)
+            .sum::<i32>();
         if num_neighbors == 0 {
             return true;
         } else if num_neighbors >= self.crowd_tolerance {
@@ -180,7 +187,7 @@ impl VectorGrid {
         let width: i32 = grid[0].len() as i32;
         let neighbors: VecNeighbors = match simple_neighbors {
             true => Self::generate_part_one_neighbors_vecgrid(&grid),
-            false => Self::generate_part_two_neighbors_vecgrid(&grid)
+            false => Self::generate_part_two_neighbors_vecgrid(&grid),
         };
         let crowd_tolerance: i32 = if simple_neighbors { 4 as i32 } else { 5 as i32 };
 
@@ -200,14 +207,25 @@ impl VectorGrid {
         for (i, line) in grid.iter().enumerate() {
             for (j, char) in line.iter().enumerate() {
                 if *char == b'L' {
-                    let mut neighbor_set: Vec<Coord> =vec![];
+                    let mut neighbor_set: Vec<Coord> = vec![];
                     for offset in NEIGHBORS.iter() {
-                        let new_coord: Coord = Coord{y: i as i32, x: j as i32} + *offset;
-                        if in_bounds((height, width), new_coord) && grid[new_coord.y as usize][new_coord.x as usize] == b'L' {
+                        let new_coord: Coord = Coord {
+                            y: i as i32,
+                            x: j as i32,
+                        } + *offset;
+                        if in_bounds((height, width), new_coord)
+                            && grid[new_coord.y as usize][new_coord.x as usize] == b'L'
+                        {
                             neighbor_set.push(new_coord);
                         }
                     }
-                    neighbors.insert(Coord{y: i as i32, x: j as i32}, neighbor_set);
+                    neighbors.insert(
+                        Coord {
+                            y: i as i32,
+                            x: j as i32,
+                        },
+                        neighbor_set,
+                    );
                 }
             }
         }
@@ -221,9 +239,12 @@ impl VectorGrid {
         for (i, line) in grid.iter().enumerate() {
             for (j, char) in line.iter().enumerate() {
                 if *char == b'L' {
-                    let mut neighbor_set: Vec<Coord> =vec![];
+                    let mut neighbor_set: Vec<Coord> = vec![];
                     for offset in NEIGHBORS.iter() {
-                        let mut current_coord = Coord{y: i as i32, x: j as i32} + *offset;
+                        let mut current_coord = Coord {
+                            y: i as i32,
+                            x: j as i32,
+                        } + *offset;
                         while in_bounds((height, width), current_coord) {
                             if grid[current_coord.y as usize][current_coord.x as usize] == b'L' {
                                 neighbor_set.push(current_coord);
@@ -232,7 +253,13 @@ impl VectorGrid {
                             current_coord += *offset;
                         }
                     }
-                    neighbors.insert(Coord{y: i as i32, x: j as i32}, neighbor_set);
+                    neighbors.insert(
+                        Coord {
+                            y: i as i32,
+                            x: j as i32,
+                        },
+                        neighbor_set,
+                    );
                 }
             }
         }
@@ -249,19 +276,29 @@ impl VectorGrid {
         self.grid[coord.y as usize][coord.x as usize] = match self.get(coord) {
             b'#' => b'L',
             b'L' => b'#',
-            other => other
+            other => other,
         }
     }
 
     fn _needs_to_change(&self, coord: &Coord) -> bool {
-        let num_neighbors: i32 = self.neighbors[&coord].iter().filter(|n| self.get(n) == b'#' ).count() as i32;
+        let num_neighbors: i32 = self.neighbors[&coord]
+            .iter()
+            .filter(|n| self.get(n) == b'#')
+            .count() as i32;
         let current_val = self.get(coord);
-        (current_val == b'L' && num_neighbors == 0) || (current_val == b'#' && num_neighbors >= self.crowd_tolerance)
+        let needs_to_turn_on = (current_val == b'L' && num_neighbors == 0);
+        let needs_to_turn_off = (current_val == b'#' && num_neighbors >= self.crowd_tolerance);
+        needs_to_turn_off || needs_to_turn_on
     }
 
     fn convolute(&mut self) -> bool {
         // self.neighbors.keys() is an iterator of all spots we need to check for changes
-        let changes: Vec<Coord> = self.neighbors.keys().copied().filter(|coord| self._needs_to_change(&coord)).collect();
+        let changes: Vec<Coord> = self
+            .neighbors
+            .keys()
+            .copied()
+            .filter(|coord| self._needs_to_change(&coord))
+            .collect();
         for change in &changes {
             self.flip(change)
         }
@@ -269,7 +306,10 @@ impl VectorGrid {
     }
 
     fn count_occupied(&self) -> usize {
-        self.neighbors.keys().filter(|coord| self.get(coord) == b'#').count()
+        self.neighbors
+            .keys()
+            .filter(|coord| self.get(coord) == b'#')
+            .count()
     }
 
     fn run_until_finished(&mut self) -> usize {
