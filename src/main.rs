@@ -14,6 +14,7 @@ mod day07;
 mod day08;
 mod day09;
 mod day10;
+mod day11;
 
 aoc_main::main! {
     year 2020;
@@ -27,4 +28,5 @@ aoc_main::main! {
     day08 : generator => part_one, part_two;
     day09 : generator => part_one, part_two;
     day10 : generator => part_one, part_two;
+    day11 : generator => part_one_vecgrid, part_one_hashgrid, part_two_vecgrid, part_two_hashgrid;
 }
