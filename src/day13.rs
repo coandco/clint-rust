@@ -29,14 +29,13 @@ impl BusInfo {
                 if times.len() == 2 {
                     let new_start_time = times[0];
                     let new_step_value = times[1] - times[0];
-                    return (new_start_time, new_step_value)
+                    return (new_start_time, new_step_value);
                 }
             }
             current_time += existing_step;
         }
     }
 }
-
 
 type InputData = (u64, Vec<BusInfo>);
 
