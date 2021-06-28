@@ -70,10 +70,9 @@ pub fn part_one(data: &InputData) -> u64 {
     let (part_one_start_time, bus_list) = data.clone();
     let mut current_time = part_one_start_time;
     let arrived_bus = loop {
-        let arrived_buses: Vec<BusInfo> = bus_list
+        let arrived_buses: Vec<&BusInfo> = bus_list
             .iter()
             .filter(|bus| bus.valid_part_one(current_time))
-            .copied()
             .collect();
         if arrived_buses.len() > 0 {
             break arrived_buses[0];
