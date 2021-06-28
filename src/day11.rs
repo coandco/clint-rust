@@ -286,8 +286,8 @@ impl VectorGrid {
             .filter(|n| self.get(n) == b'#')
             .count() as i32;
         let current_val = self.get(coord);
-        let needs_to_turn_on = (current_val == b'L' && num_neighbors == 0);
-        let needs_to_turn_off = (current_val == b'#' && num_neighbors >= self.crowd_tolerance);
+        let needs_to_turn_on = current_val == b'L' && num_neighbors == 0;
+        let needs_to_turn_off = current_val == b'#' && num_neighbors >= self.crowd_tolerance;
         needs_to_turn_off || needs_to_turn_on
     }
 
