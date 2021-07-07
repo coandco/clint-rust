@@ -1,18 +1,20 @@
 [package]
-name = "clint-rust"
-version = "0.1.0"
 authors = ["Clint Olson <coandco@gmail.com>"]
 edition = "2018"
+name = "clint-rust"
+version = "0.1.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hashbrown = "0.11"
+hex = "0.4"
 itertools = "0.10.1"
+lazy_static = "1.4.0"
 num-cmp = "0.1.0"
 parse-display = "0.5.0"
-scan_fmt = "0.2.6"
-hex = "0.4"
-phf = { version = "0.9", features = ["macros"] }
-lazy_static = "1.4.0"
 regex = "1.5.4"
+scan_fmt = "0.2.6"
 aoc-main = { version = "0.3.0", features = ["bench"] }
+phf = { version = "0.9", features = ["macros"] }
+bit_field = "0.10.1"
+
