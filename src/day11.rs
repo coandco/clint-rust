@@ -38,7 +38,7 @@ static NEIGHBORS: [Coord; 8] = [
 ];
 
 fn in_bounds(shape: (i32, i32), coord: Coord) -> bool {
-    return 0 <= coord.y && coord.y < shape.0 && 0 <= coord.x && coord.x < shape.1;
+    0 <= coord.y && coord.y < shape.0 && 0 <= coord.x && coord.x < shape.1
 }
 
 type HashGrid = HashMap<Coord, bool>;
@@ -54,7 +54,7 @@ pub struct HashedGrid {
 }
 
 impl HashedGrid {
-    fn new(data: &Vec<Vec<u8>>, simple_neighbors: bool) -> Self {
+    fn new(data: &[Vec<u8>], simple_neighbors: bool) -> Self {
         let height = data.len() as i32;
         let width = data[0].len() as i32;
         let grid = Self::populate_hashgrid(data);
@@ -73,7 +73,7 @@ impl HashedGrid {
         }
     }
 
-    fn populate_hashgrid(data: &Vec<Vec<u8>>) -> HashGrid {
+    fn populate_hashgrid(data: &[Vec<u8>]) -> HashGrid {
         let mut grid: HashGrid = HashMap::new();
         for (i, line) in data.iter().enumerate() {
             for (j, byte) in line.iter().enumerate() {
@@ -160,7 +160,8 @@ impl HashedGrid {
     }
 
     fn count_occupied(&self) -> usize {
-        self.grid.values().copied().filter(|x| *x == true).count()
+        // Filter for true values
+        self.grid.values().copied().filter(|x| *x).count()
     }
 
     fn run_until_finished(&mut self) -> usize {
@@ -189,7 +190,7 @@ impl VectorGrid {
             true => Self::generate_part_one_neighbors_vecgrid(&grid),
             false => Self::generate_part_two_neighbors_vecgrid(&grid),
         };
-        let crowd_tolerance: i32 = if simple_neighbors { 4 as i32 } else { 5 as i32 };
+        let crowd_tolerance: i32 = if simple_neighbors { 4_i32 } else { 5_i32 };
 
         VectorGrid {
             height,
@@ -200,7 +201,7 @@ impl VectorGrid {
         }
     }
 
-    fn generate_part_one_neighbors_vecgrid(grid: &VecGrid) -> VecNeighbors {
+    fn generate_part_one_neighbors_vecgrid(grid: &[Vec<u8>]) -> VecNeighbors {
         let mut neighbors: VecNeighbors = HashMap::new();
         let height = grid.len() as i32;
         let width = grid[0].len() as i32;
@@ -232,7 +233,7 @@ impl VectorGrid {
         neighbors
     }
 
-    fn generate_part_two_neighbors_vecgrid(grid: &VecGrid) -> VecNeighbors {
+    fn generate_part_two_neighbors_vecgrid(grid: &[Vec<u8>]) -> VecNeighbors {
         let mut neighbors: VecNeighbors = HashMap::new();
         let height = grid.len() as i32;
         let width = grid[0].len() as i32;
@@ -302,7 +303,7 @@ impl VectorGrid {
         for change in &changes {
             self.flip(change)
         }
-        changes.len() != 0
+        !changes.is_empty()
     }
 
     fn count_occupied(&self) -> usize {
@@ -322,24 +323,24 @@ pub fn generator(input: &str) -> Vec<Vec<u8>> {
     input.lines().map(|line| line.as_bytes().to_vec()).collect()
 }
 
-pub fn part_one_hashgrid(data: &Vec<Vec<u8>>) -> usize {
+pub fn part_one_hashgrid(data: &[Vec<u8>]) -> usize {
     let mut grid = HashedGrid::new(data, true);
     grid.run_until_finished()
 }
 
-pub fn part_two_hashgrid(data: &Vec<Vec<u8>>) -> usize {
+pub fn part_two_hashgrid(data: &[Vec<u8>]) -> usize {
     let mut grid = HashedGrid::new(data, false);
     grid.run_until_finished()
 }
 
-pub fn part_one_vecgrid(data: &Vec<Vec<u8>>) -> usize {
-    let raw_grid: VecGrid = data.clone();
+pub fn part_one_vecgrid(data: &[Vec<u8>]) -> usize {
+    let raw_grid: VecGrid = data.to_owned();
     let mut grid = VectorGrid::new(raw_grid, true);
     grid.run_until_finished()
 }
 
-pub fn part_two_vecgrid(data: &Vec<Vec<u8>>) -> usize {
-    let raw_grid: VecGrid = data.clone();
+pub fn part_two_vecgrid(data: &[Vec<u8>]) -> usize {
+    let raw_grid: VecGrid = data.to_owned();
     let mut grid = VectorGrid::new(raw_grid, false);
     grid.run_until_finished()
 }

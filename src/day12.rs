@@ -155,7 +155,7 @@ pub fn generator(input: &str) -> Vec<(Op, i32)> {
         .collect()
 }
 
-pub fn part_one(data: &Vec<(Op, i32)>) -> i32 {
+pub fn part_one(data: &[(Op, i32)]) -> i32 {
     let mut current_loc = Coord { x: 0, y: 0 };
     let mut current_heading = Heading::E;
     for (op, value) in data {
@@ -177,7 +177,7 @@ pub fn part_one(data: &Vec<(Op, i32)>) -> i32 {
     current_loc.manhattan_distance()
 }
 
-pub fn part_two(data: &Vec<(Op, i32)>) -> i32 {
+pub fn part_two(data: &[(Op, i32)]) -> i32 {
     let mut ship_loc = Coord { x: 0, y: 0 };
     let mut waypoint_loc = Coord { y: -1, x: 10 };
     for (op, value) in data {

@@ -48,10 +48,9 @@ pub fn generator(input: &str) -> InputData {
         .expect("Couldn't parse start time");
     let bus_list = input
         .lines()
-        .skip(1)
-        .next()
+        .nth(1)
         .unwrap()
-        .split(",")
+        .split(',')
         .enumerate()
         .filter_map(|(i, busname)| match busname {
             "x" => None,
@@ -74,7 +73,7 @@ pub fn part_one(data: &InputData) -> u64 {
             .iter()
             .filter(|bus| bus.valid_part_one(current_time))
             .collect();
-        if arrived_buses.len() > 0 {
+        if !arrived_buses.is_empty() {
             break arrived_buses[0];
         }
         current_time += 1

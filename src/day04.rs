@@ -9,25 +9,25 @@ fn matches_year_range(year_str: &str, low: usize, high: usize) -> bool {
     if year_str.len() != 4 {
         return false;
     }
-    return if let Ok(year_int) = year_str.parse::<usize>() {
+    if let Ok(year_int) = year_str.parse::<usize>() {
         low <= year_int && year_int <= high
     } else {
         false
-    };
+    }
 }
 
 fn matches_height(raw_height: &str) -> bool {
     let height_len = raw_height.len();
     let (height_str, height_suffix) = raw_height.split_at(height_len - 2);
-    return if let Ok(height_int) = height_str.parse::<usize>() {
+    if let Ok(height_int) = height_str.parse::<usize>() {
         match height_suffix {
-            "cm" => 150 <= height_int && height_int <= 193,
-            "in" => 59 <= height_int && height_int <= 76,
+            "cm" => (150..=193).contains(&height_int),
+            "in" => (59..=76).contains(&height_int),
             _ => false,
         }
     } else {
         false
-    };
+    }
 }
 
 #[derive(Debug)]
@@ -54,7 +54,7 @@ impl Passport {
                     _ => true,
                 }
             } else {
-                return false;
+                false
             }
         })
     }
@@ -75,10 +75,10 @@ pub fn generator(input: &str) -> Vec<Passport> {
     input.split("\n\n").map(|record| record.parse()).collect::<Result<Vec<Passport>, _>>().expect("Error parsing input for day 4!")
 }
 
-pub fn part_one(data: &Vec<Passport>) -> usize {
+pub fn part_one(data: &[Passport]) -> usize {
     data.iter().filter(|record| record.part_one_valid()).count()
 }
 
-pub fn part_two(data: &Vec<Passport>) -> usize {
+pub fn part_two(data: &[Passport]) -> usize {
     data.iter().filter(|record| record.part_two_valid()).count()
 }

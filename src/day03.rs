@@ -15,29 +15,25 @@ impl AddAssign for Coord {
     }
 }
 
-fn has_tree(treemap: &Vec<Vec<u8>>, loc: &Coord) -> Option<bool> {
+fn has_tree(treemap: &[Vec<u8>], loc: &Coord) -> Option<bool> {
     if loc.y >= treemap.len() {
         return None;
     }
-    return if treemap[loc.y][loc.x % treemap[0].len()] == b'#' {
+    if treemap[loc.y][loc.x % treemap[0].len()] == b'#' {
         Some(true)
     } else {
         Some(false)
-    };
+    }
 }
 
-fn check_slope(treemap: &Vec<Vec<u8>>, slope: Coord) -> usize {
+fn check_slope(treemap: &[Vec<u8>], slope: Coord) -> usize {
     let mut num_trees = 0;
     let mut curpos = Coord { x: 0, y: 0 };
-    loop {
-        if let Some(current_tree) = has_tree(treemap, &curpos) {
-            if current_tree {
-                num_trees += 1
-            }
-            curpos += slope
-        } else {
-            break;
+    while let Some(current_tree) = has_tree(treemap, &curpos) {
+        if current_tree {
+            num_trees += 1
         }
+        curpos += slope
     }
     num_trees
 }
@@ -46,11 +42,11 @@ pub fn generator(input: &str) -> Vec<Vec<u8>> {
     input.lines().map(|line| line.as_bytes().to_vec()).collect()
 }
 
-pub fn part_one(data: &Vec<Vec<u8>>) -> usize {
+pub fn part_one(data: &[Vec<u8>]) -> usize {
     check_slope(&data, Coord { x: 3, y: 1 })
 }
 
-pub fn part_two(data: &Vec<Vec<u8>>) -> usize {
+pub fn part_two(data: &[Vec<u8>]) -> usize {
     let slopes = vec![
         Coord { x: 1, y: 1 },
         Coord { x: 3, y: 1 },
@@ -62,5 +58,5 @@ pub fn part_two(data: &Vec<Vec<u8>>) -> usize {
         .iter()
         .map(|slope| check_slope(&data, *slope))
         .collect();
-    trees_per_slope.iter().fold(1, |acc, x| acc * x)
+    trees_per_slope.iter().product()
 }

@@ -1,10 +1,10 @@
 use hashbrown::HashMap;
 
-fn run_game(data: &Vec<usize>, iterations: usize) -> usize {
+fn run_game(data: &[usize], iterations: usize) -> usize {
     let mut seen: HashMap<usize, usize> = data
         .iter()
         .enumerate()
-        .map(|(i, x)| (*x, i+1 as usize))
+        .map(|(i, x)| (*x, i+1_usize))
         .collect();
     let mut last_number: usize = *data.last().unwrap();
     for i in data.len()..iterations {
@@ -22,10 +22,10 @@ pub fn generator(input: &str) -> Vec<usize> {
         .collect()
 }
 
-pub fn part_one(data: &Vec<usize>) -> usize {
+pub fn part_one(data: &[usize]) -> usize {
     run_game(data, 2020)
 }
 
-pub fn part_two(data: &Vec<usize>) -> usize {
+pub fn part_two(data: &[usize]) -> usize {
     run_game(data, 30000000)
 }

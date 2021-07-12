@@ -13,7 +13,7 @@ pub fn generator(input: &str) -> Vec<Rule> {
     input.lines().map(|line| line.parse::<Rule>()).collect::<Result<Vec<Rule>, _>>().expect("Error parsing input for day 2!")
 }
 
-pub fn part_one(data: &Vec<Rule>) -> usize {
+pub fn part_one(data: &[Rule]) -> usize {
     let mut num_valid = 0;
     for rule in data {
         let num_in_pass = rule.pass.matches(rule.char).count();
@@ -24,7 +24,7 @@ pub fn part_one(data: &Vec<Rule>) -> usize {
     num_valid
 }
 
-pub fn part_two(data: &Vec<Rule>) -> usize {
+pub fn part_two(data: &[Rule]) -> usize {
     let mut num_valid = 0;
     for rule in data {
         let low_char = rule.pass.chars().nth(rule.low - 1).unwrap();

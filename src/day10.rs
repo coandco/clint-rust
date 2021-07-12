@@ -18,7 +18,7 @@ pub fn generator(input: &str) -> Vec<usize> {
     full_data
 }
 
-pub fn part_one(data: &Vec<usize>) -> usize {
+pub fn part_one(data: &[usize]) -> usize {
     // Calculate the differences between each item
     let differences: Vec<usize> = Itertools::tuple_windows(data.iter())
         .map(|(a, b)| b - a)
@@ -36,16 +36,16 @@ pub fn part_one(data: &Vec<usize>) -> usize {
 
 fn calculate_value(known_cache: &mut HashMap<usize, usize>, entry: usize) -> usize {
     let mut total: usize = 0;
-    for step in 1..=3 as usize {
+    for step in 1..=3_usize {
         // If value + step is in the cache, add it to your own value
-        total += known_cache.get(&(entry + (step as usize))).unwrap_or(&(0 as usize));
+        total += known_cache.get(&(entry + (step as usize))).unwrap_or(&(0_usize));
     }
     // Add this calculated value to the cache before returning
     known_cache.insert(entry, total);
     total
 }
 
-pub fn part_two(data: &Vec<usize>) -> usize {
+pub fn part_two(data: &[usize]) -> usize {
     // Start with our device and initialize the number of paths to it to one
     let mut known_cache: HashMap<usize, usize> = HashMap::new();
     known_cache.insert(*data.last().unwrap(), 1);

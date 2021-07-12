@@ -3,7 +3,7 @@ extern crate scan_fmt;
 // #[macro_use(lazy_static)]
 // extern crate lazy_static;
 
-use aoc_main;
+// use aoc_main;
 mod day01;
 mod day02;
 mod day03;

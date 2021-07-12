@@ -32,7 +32,7 @@ impl FromStr for Instruction {
     }
 }
 
-fn get_masked_value(mask: &Vec<u8>, mem: u64) -> u64 {
+fn get_masked_value(mask: &[u8], mem: u64) -> u64 {
     let mut new_value: u64 = 0;
     for (i, maskbit) in mask.iter().enumerate() {
         let new_bit: bool = match *maskbit {
@@ -50,12 +50,12 @@ pub fn generator(input: &str) -> Vec<Instruction> {
         .lines()
         .map(|line| {
             line.parse::<Instruction>()
-                .expect(format!("Failed to parse line {}", line).as_str())
+                .unwrap_or_else(|_| panic!("Failed to parse line {}", line))
         })
         .collect()
 }
 
-pub fn part_one(data: &Vec<Instruction>) -> u64 {
+pub fn part_one(data: &[Instruction]) -> u64 {
     let mut mask = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".as_bytes().to_vec();
     let mut mem_hash: HashMap<u64, u64> = HashMap::new();
     for line in data {
@@ -81,7 +81,7 @@ struct FloatingAddress {
 }
 
 impl<'a> FloatingAddress {
-    fn new(mask: &Vec<u8>, address: u64) -> Self {
+    fn new(mask: &[u8], address: u64) -> Self {
         let num_bits: u32 = mask
             .iter()
             .fold(0, |acc, x| if *x == b'X' { acc + 1 } else { acc });
@@ -103,12 +103,12 @@ impl<'a> FloatingAddress {
                 _ => (), // This is an "X" in the pattern and we'll be overwriting it during iteration
             }
         }
-        return FloatingAddress {
+        FloatingAddress {
             curval: 0,
             max_iter,
             base_pattern,
             bit_locations,
-        };
+        }
     }
 }
 
@@ -127,7 +127,7 @@ impl Iterator for FloatingAddress {
     }
 }
 
-pub fn part_two(data: &Vec<Instruction>) -> u64 {
+pub fn part_two(data: &[Instruction]) -> u64 {
     let mut mask = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".as_bytes().to_vec();
     let mut mem_hash: HashMap<u64, u64> = HashMap::new();
     for line in data {

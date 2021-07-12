@@ -26,22 +26,21 @@ fn line_to_bag(line: &str) -> Result<Bag, String> {
     if LINE_REGEX.is_match(line) {
         let captures = LINE_REGEX.captures(line).unwrap();
         let color = captures.name("color").unwrap().as_str().to_string();
-        for item in captures.name("contain").unwrap().as_str().split(",") {
+        for item in captures.name("contain").unwrap().as_str().split(',') {
             if item == "no other bags" {
                 continue;
+            } else if CONTAINS_REGEX.is_match(item) {
+                let captures = CONTAINS_REGEX.captures(item).unwrap();
+                let contains_num = captures.name("num").unwrap().as_str().to_string();
+                let contains_color = captures.name("color").unwrap().as_str().to_string();
+                contains.insert(contains_color, contains_num.parse::<u32>().unwrap());
             } else {
-                if CONTAINS_REGEX.is_match(item) {
-                    let captures = CONTAINS_REGEX.captures(item).unwrap();
-                    let contains_num = captures.name("num").unwrap().as_str().to_string();
-                    let contains_color = captures.name("color").unwrap().as_str().to_string();
-                    contains.insert(contains_color, contains_num.parse::<u32>().unwrap());
-                } else {
-                    return Err(format!("Couldn't parse contains string {}", item));
-                }
+                return Err(format!("Couldn't parse contains string {}", item));
             }
         }
+        #[allow(clippy::redundant_clone)]
         Ok(Bag {
-            color: color,
+            color,
             bag_value: 0,
             contains: contains.clone(),
             unknown_contains: contains.clone(),
@@ -71,7 +70,7 @@ fn build_reversed_bag_map(bag_map: &BagMap) -> ReverseBagMap {
 
 fn get_all_containing_bags(reversed_bag_map: &ReverseBagMap, to_find: String) -> HashSet<String> {
     let mut current_set: HashSet<String> = HashSet::new();
-    current_set.insert(to_find.clone());
+    current_set.insert(to_find);
     loop {
         let start_set = current_set.clone();
         for color in &start_set {
@@ -86,7 +85,7 @@ fn get_all_containing_bags(reversed_bag_map: &ReverseBagMap, to_find: String) ->
 
 fn bag_descendants(bag_map: &BagMap, start_bag: String) -> HashSet<String> {
     let mut descendants: HashSet<String> = HashSet::new();
-    descendants.insert(start_bag.clone());
+    descendants.insert(start_bag);
     loop {
         let start_set = descendants.clone();
         for color in &start_set {
@@ -105,7 +104,7 @@ fn generate_bag_values(
 ) -> HashMap<String, u32> {
     let mut known_values: HashMap<String, u32> = HashMap::new();
     for bag in bag_map.values() {
-        if bag.unknown_contains.len() == 0 {
+        if bag.unknown_contains.is_empty() {
             known_values.insert(bag.color.clone(), bag.bag_value);
         }
     }
@@ -126,7 +125,7 @@ fn generate_bag_values(
                         + (known_values[color] * parent_bag.contains[color]);
                     parent_bag.bag_value += new_value;
                     parent_bag.unknown_contains.remove(color);
-                    if parent_bag.unknown_contains.len() == 0 {
+                    if parent_bag.unknown_contains.is_empty() {
                         known_values.insert(parent_bag.color.clone(), parent_bag.bag_value);
                     }
                 }
@@ -136,7 +135,7 @@ fn generate_bag_values(
             break;
         }
     }
-    known_values.clone()
+    known_values
 }
 
 pub fn generator(input: &str) -> (BagMap, ReverseBagMap) {
