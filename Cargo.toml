@@ -17,4 +17,5 @@ scan_fmt = "0.2.6"
 aoc-main = { version = "0.3.0", features = ["bench"] }
 bit_field = "0.10.1"
 im = "15.0.0"
+derive_more = "0.99.16"
 
